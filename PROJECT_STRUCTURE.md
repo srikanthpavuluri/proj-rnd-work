@@ -1,15 +1,20 @@
 # Project Structure
 
-## Complete React Project Setup
+## Next.js Project Setup
 
-Your checkout flow is now set up as a complete React project with the following structure:
+Your checkout flow is now set up as a Next.js (Pages Router) project with the following structure:
 
 ```
 refactor/
+├── pages/
+│   ├── _app.tsx                              # Next.js app wrapper with providers
+│   ├── _document.tsx                         # Custom HTML document
+│   ├── index.tsx                             # Home page (redirects to checkout)
+│   └── checkout.tsx                          # Checkout page
 ├── src/
 │   ├── components/
 │   │   └── Checkout/
-│   │       ├── index.tsx                    # Main checkout orchestrator
+│   │       ├── index.tsx                     # Main checkout orchestrator
 │   │       ├── Steps/
 │   │       │   ├── DeliveryStep/
 │   │       │   │   └── index.tsx            # Delivery step component
@@ -18,19 +23,20 @@ refactor/
 │   │       │   └── ReviewStep/
 │   │       │       └── index.tsx             # Review step component
 │   │       └── Shared/
-│   │           └── AddressForm.tsx          # Reusable address form
-│   ├── store/
-│   │   ├── index.ts                          # Redux store configuration
-│   │   └── checkoutSlice.ts                  # Checkout Redux slice
-│   ├── App.tsx                               # Main app component
+│   │           ├── AddressForm.tsx           # Reusable address form
+│   │           └── SavedAddressSelector.tsx  # Saved address selector
+│   ├── context/
+│   │   └── CheckoutContext.tsx               # Checkout context provider
+│   ├── hooks/
+│   │   └── useGooglePlaces.ts                # Google Places autocomplete hook
+│   ├── utils/
+│   │   └── mockApi.ts                        # Mock API for development
 │   ├── App.css                               # App styles
-│   ├── main.tsx                              # Entry point
 │   └── index.css                             # Global styles
-├── index.html                                # HTML template
+├── next.config.js                            # Next.js configuration
 ├── package.json                              # Dependencies and scripts
 ├── tsconfig.json                             # TypeScript configuration
-├── tsconfig.node.json                        # TypeScript config for Node
-├── vite.config.ts                            # Vite configuration
+├── .eslintrc.json                            # ESLint configuration
 ├── .gitignore                                # Git ignore rules
 └── README.md                                 # Project documentation
 ```

@@ -36,6 +36,7 @@ export const mockFetch = async (url: string, options?: RequestInit): Promise<Res
   // Handle different API endpoints
   if (url.includes('/api/cart') && options?.method === 'GET') {
     responseData = mockApiResponses.cart || getDefaultCart();
+    console.log('responseData', responseData);
     // Ensure cart is always initialized
     if (!mockApiResponses.cart) {
       mockApiResponses.cart = responseData;
@@ -273,7 +274,26 @@ const getDefaultCart = () => ({
     retailDeliveryFeeLabel: '',
   },
   cartSubTotalForFreeShippingEligibleItems: 0,
-  shippingAddress: null,
+  shippingAddress: {
+    "key": "home",
+    "id": null,
+    "firstName": "Test",
+    "lastName": "t",
+    "streetName": "1113 NW 103rd St",
+    "additionalStreetInfo": "",
+    "postalCode": "73114-5001",
+    "city": "Oklahoma City",
+    "state": "OK",
+    "country": "US",
+    "phone": "(312) 312-3121",
+    "email": "TEST@TEST.COM",
+    "company": null,
+    "billingAddress": null,
+    "shippingAddress": null,
+    "defaultBillingAddress": null,
+    "defaultShippingAddress": null,
+    "__typename": "CartAddress"
+  },
   billingAddress: null,
   paymentDetails: {
     cardHolderName: null,

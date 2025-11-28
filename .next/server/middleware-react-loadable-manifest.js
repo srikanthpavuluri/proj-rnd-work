@@ -1,0 +1,1 @@
+self.__REACT_LOADABLE_MANIFEST="{\"components/Checkout/Steps/ReviewStep/index.tsx -> ../../../../utils/mockApi\":{\"id\":\"components/Checkout/Steps/ReviewStep/index.tsx -> ../../../../utils/mockApi\",\"files\":[]}}"

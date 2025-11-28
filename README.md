@@ -1,11 +1,11 @@
-# Checkout Flow - React Project
+# Checkout Flow - Next.js Project
 
-A complete checkout flow implementation built with React, TypeScript, Redux Toolkit, and Vite.
+A complete checkout flow implementation built with Next.js (Pages Router), React, TypeScript, and Context API.
 
 ## Features
 
 - ✅ Step-based checkout flow (Delivery → Payment → Review)
-- ✅ Redux state management for checkout data
+- ✅ Context API state management for checkout data
 - ✅ Form validation and error handling
 - ✅ Incremental saving of checkout steps
 - ✅ Edit mode for completed steps
@@ -13,25 +13,35 @@ A complete checkout flow implementation built with React, TypeScript, Redux Tool
 - ✅ Gift message support
 - ✅ Gift card and credit card payment options
 - ✅ Order summary sidebar
+- ✅ Saved addresses for logged-in users
+- ✅ Google Places API integration (with mock data)
 
 ## Project Structure
 
 ```
-src/
-├── components/
-│   └── Checkout/
-│       ├── index.tsx                 # Main checkout component
-│       ├── Steps/
-│       │   ├── DeliveryStep/         # Delivery step (shipping + gift message)
-│       │   ├── PaymentStep/         # Payment step (gift card + credit card + billing)
-│       │   └── ReviewStep/          # Review step (final review + place order)
-│       └── Shared/
-│           └── AddressForm.tsx      # Reusable address form
-├── store/
-│   ├── index.ts                      # Redux store configuration
-│   └── checkoutSlice.ts              # Checkout Redux slice
-├── App.tsx                           # Main app component
-└── main.tsx                          # Entry point
+refactor/
+├── pages/
+│   ├── _app.tsx                      # Next.js app wrapper with providers
+│   ├── _document.tsx                 # Custom HTML document
+│   ├── index.tsx                     # Home page (redirects to checkout)
+│   └── checkout.tsx                  # Checkout page
+├── src/
+│   ├── components/
+│   │   └── Checkout/
+│   │       ├── index.tsx             # Main checkout component
+│   │       ├── Steps/
+│   │       │   ├── DeliveryStep/    # Delivery step (shipping + gift message)
+│   │       │   ├── PaymentStep/     # Payment step (gift card + credit card + billing)
+│   │       │   └── ReviewStep/      # Review step (final review + place order)
+│   │       └── Shared/
+│   │           ├── AddressForm.tsx  # Reusable address form
+│   │           └── SavedAddressSelector.tsx  # Saved address selector
+│   ├── context/
+│   │   └── CheckoutContext.tsx      # Checkout context provider
+│   ├── hooks/
+│   │   └── useGooglePlaces.ts       # Google Places autocomplete hook
+│   └── utils/
+│       └── mockApi.ts                # Mock API for development
 ```
 
 ## Getting Started
@@ -52,14 +62,14 @@ yarn install
 pnpm install
 ```
 
-2. Set up Google Places API:
+2. Set up Google Places API (optional):
    - Get your API key from [Google Cloud Console](https://console.cloud.google.com/google/maps-apis)
    - Enable "Places API" in your Google Cloud project
-   - Create a `.env` file in the root directory:
+   - Create a `.env.local` file in the root directory:
    ```bash
-   VITE_GOOGLE_PLACES_API_KEY=your_api_key_here
+   NEXT_PUBLIC_GOOGLE_PLACES_API_KEY=your_api_key_here
    ```
-   - Note: The address autocomplete will work without the API key, but you'll see a console warning.
+   - Note: The address autocomplete works with mock data by default, so the API key is optional.
 
 3. Start the development server:
 ```bash
@@ -70,7 +80,7 @@ yarn dev
 pnpm dev
 ```
 
-4. Open your browser and navigate to `http://localhost:5173`
+4. Open your browser and navigate to `http://localhost:3000`
 
 ### Build for Production
 
@@ -82,16 +92,16 @@ yarn build
 pnpm build
 ```
 
-The built files will be in the `dist` directory.
+The built files will be in the `.next` directory.
 
-### Preview Production Build
+### Start Production Server
 
 ```bash
-npm run preview
+npm start
 # or
-yarn preview
+yarn start
 # or
-pnpm preview
+pnpm start
 ```
 
 ## API Endpoints
@@ -112,29 +122,16 @@ The checkout flow expects the following API endpoints:
 
 ### Basic Setup
 
-```tsx
-import { Provider } from 'react-redux';
-import { store } from './store';
-import Checkout from './components/Checkout';
-
-function App() {
-  return (
-    <Provider store={store}>
-      <Checkout />
-    </Provider>
-  );
-}
-```
+The checkout flow is already set up in `pages/checkout.tsx`. The `CheckoutProvider` is configured in `pages/_app.tsx` to wrap all pages.
 
 ### Accessing Checkout State
 
 ```tsx
-import { useSelector } from 'react-redux';
+import { useCheckout } from '../context/CheckoutContext';
 
 const MyComponent = () => {
-  const { currentStep, delivery, payment, cart } = useSelector(
-    (state: RootState) => state.checkout
-  );
+  const { state } = useCheckout();
+  const { currentStep, delivery, payment, cart } = state;
   
   return <div>Current Step: {currentStep}</div>;
 };
@@ -143,15 +140,14 @@ const MyComponent = () => {
 ### Dispatching Actions
 
 ```tsx
-import { useDispatch } from 'react-redux';
-import { saveShippingAddress } from './store/checkoutSlice';
+import { useCheckout } from '../context/CheckoutContext';
 
 const MyComponent = () => {
-  const dispatch = useDispatch();
+  const { saveShippingAddress } = useCheckout();
   
   const handleSave = async (address) => {
     try {
-      await dispatch(saveShippingAddress(address)).unwrap();
+      await saveShippingAddress(address);
       // Success!
     } catch (error) {
       // Handle error
@@ -162,11 +158,11 @@ const MyComponent = () => {
 
 ## Technologies Used
 
+- **Next.js 14** - React framework with Pages Router
 - **React 18** - UI library
 - **TypeScript** - Type safety
-- **Redux Toolkit** - State management
-- **Vite** - Build tool and dev server
-- **React Router** - Routing (optional, for navigation)
+- **Context API** - State management
+- **Next.js Router** - Built-in routing
 
 ## Development
 

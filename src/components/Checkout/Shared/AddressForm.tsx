@@ -1,8 +1,8 @@
 // components/Checkout/Shared/AddressForm.tsx
 import React, { useState, useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
 import { useGooglePlaces } from '../../../hooks/useGooglePlaces';
 import SavedAddressSelector, { SavedAddress } from './SavedAddressSelector';
+import { useCheckout } from '../../../context/CheckoutContext';
 
 interface AddressFormProps {
   initialValues?: AddressFields;
@@ -44,7 +44,10 @@ const AddressForm: React.FC<AddressFormProps> = ({
   onSelectSavedAddress,
   showSubmitButton = true,
 }) => {
-  const shippingAddress = useSelector((state: any) => state.checkout.delivery.shippingAddress);
+  const {
+    state: { delivery },
+  } = useCheckout();
+  const shippingAddress = delivery.shippingAddress;
   
   const [formData, setFormData] = useState<AddressFields>({
     firstName: '',
@@ -701,17 +704,13 @@ const AddressForm: React.FC<AddressFormProps> = ({
         </>
       )}
 
-      <button type="submit" className="submit-button" disabled={loading}>
-        {loading ? 'Saving...' : 'Save & Continue'}
-      </button>
-        </>
-      )}
-      
-      {/* Submit button when a saved address is selected (not "Add New") */}
-      {selectedSavedAddressId && selectedSavedAddressId !== 'add-new' && !showNewAddressForm && (
+      {/* Submit button - only show if showSubmitButton is true */}
+      {showSubmitButton && (
         <button type="submit" className="submit-button" disabled={loading}>
           {loading ? 'Saving...' : 'Save & Continue'}
         </button>
+      )}
+        </>
       )}
     </form>
   );

@@ -101,7 +101,7 @@ const SavedAddressSelector: React.FC<SavedAddressSelectorProps> = ({
           
           {/* Add New Address as a radio option */}
           <div
-            className={`address-option ${isAddNewSelected ? 'selected' : ''}`}
+            className={`address-option add-new-option ${isAddNewSelected ? 'selected' : ''}`}
             onClick={() => {
               onAddNew();
             }}

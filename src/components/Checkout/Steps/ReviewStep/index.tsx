@@ -1,13 +1,15 @@
 // components/Checkout/Steps/ReviewStep/index.tsx
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { setDeliveryEditing, setPaymentEditing } from '../../../../store/checkoutSlice';
+import { useRouter } from 'next/router';
+import { useCheckout } from '../../../../context/CheckoutContext';
 
 const ReviewStep: React.FC = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { delivery, payment, cart } = useSelector((state: any) => state.checkout);
+  const router = useRouter();
+  const {
+    state: { delivery, payment, cart },
+    setDeliveryEditing,
+    setPaymentEditing,
+  } = useCheckout();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -32,7 +34,7 @@ const ReviewStep: React.FC = () => {
       const orderData = await response.json();
       
       // Redirect to order confirmation page
-      navigate(`/order-confirmation/${orderData.orderNumber}`);
+      router.push(`/order-confirmation/${orderData.orderNumber}`);
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'An error occurred while placing your order.';
       setSubmitError(errorMessage);
@@ -55,7 +57,7 @@ const ReviewStep: React.FC = () => {
         <div className="section-header">
           <h3>Delivery</h3>
           <button
-            onClick={() => dispatch(setDeliveryEditing(true))}
+            onClick={() => setDeliveryEditing(true)}
             className="edit-link"
           >
             Edit
@@ -110,7 +112,7 @@ const ReviewStep: React.FC = () => {
         <div className="section-header">
           <h3>Payment</h3>
           <button
-            onClick={() => dispatch(setPaymentEditing(true))}
+            onClick={() => setPaymentEditing(true)}
             className="edit-link"
           >
             Edit
